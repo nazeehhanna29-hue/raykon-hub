@@ -179,6 +179,7 @@
             <div class="premium-tag">✨ PREMIUM QUALITY ✨</div>
             <div class="header-title-bottom">RAYKON</div>
         </div>
+        <div class="fancy-promo">🎁 First 10 orders get 10% off 🎁</div>
         
         <div class="products-grid">
             <div class="product-card"><div class="product-img-box"><img src="knife.jpg"></div><h3>Knife</h3><p style="font-weight:bold;color:#023e8a;">9.90 ₪</p><button class="add-to-cart-btn" onclick="openProduct('Knife', 9.90, 'knife.jpg', 'Safe 3D printed knife model.')">Add to Cart</button></div>
@@ -222,9 +223,10 @@
 
             const specialProducts = ['Infinity Cube', 'Wiggly', 'Egg', 'PS5 Holder', 'Xbox Holder', 'Spinning Fidget'];
             
+            // خيار الثلاث ألوان مدمج في سطر واحد هنا
             const customColors = [
-                'Green', 'Red', 'Pink', 'Shine Pink (+3.90₪)', 'Rainbow (+3.90₪)', 'Orange', 'Black', 
-                'Blue, Yellow and Pink (+3.90₪)', 'Gray', 'White', 'Cyan', 'Light Blue', 'Dark Blue', 'Turquoise'
+                'Green', 'Red', 'Pink', 'Shine Pink', 'Rainbow', 'Orange', 'Black', 
+                'Blue, Yellow and Pink', 'Gray', 'White', 'Cyan', 'Light Blue', 'Dark Blue', 'Turquoise'
             ];
             
             const defaultColors = ['White', 'Black', 'Red', 'Green', 'Blue'];
@@ -244,29 +246,17 @@
         }
 
         function closeModal() { document.getElementById('product-modal').style.display = 'none'; }
-
         function confirmAddToCart() {
-            const selectedColor = document.getElementById('modal-color').value;
-            let finalPrice = currentProduct.price;
-
-            // فحص إذا كان اللون المختار يحتاج زيادة سعر
-            if (selectedColor.includes('(+3.90₪)')) {
-                finalPrice += 3.90;
-            }
-
-            addToCart(`${currentProduct.name} (${selectedColor})`, finalPrice);
-            closeModal();
-            if (document.getElementById('side-cart').style.right !== "0px") toggleCart();
+            const color = document.getElementById('modal-color').value;
+            addToCart(`${currentProduct.name} (${color})`, currentProduct.price);
+            closeModal(); if (document.getElementById('side-cart').style.right !== "0px") toggleCart();
         }
-
         function addToCart(name, price) { cart.push({ id: Date.now(), name, price }); totalPrice += price; updateCartUI(); }
-        
         function removeFromCart(id) {
             const idx = cart.findIndex(i => i.id === id);
             if (idx > -1) { totalPrice -= cart[idx].price; cart.splice(idx, 1); }
             updateCartUI();
         }
-
         function updateCartUI() {
             const list = document.getElementById('cart-items-list');
             const totalDisp = document.getElementById('cart-total-price');
@@ -280,7 +270,6 @@
                 list.appendChild(li);
             });
         }
-
         function sendOrderWhatsApp() {
             if (cart.length === 0) { alert("Your cart is empty!"); return; }
             const myPhoneNumber = "972509099321"; 
