@@ -26,6 +26,13 @@
             background: var(--primary-blue); color: white;
             border: none; padding: 10px 15px; border-radius: 8px;
             cursor: pointer; font-size: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: pulse-menu 2s infinite;
+        }
+
+        @keyframes pulse-menu {
+            0% { transform: scale(1); box-shadow: 0 4px 8px rgba(2, 62, 138, 0.4); }
+            50% { transform: scale(1.1); box-shadow: 0 8px 15px rgba(2, 62, 138, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 4px 8px rgba(2, 62, 138, 0.4); }
         }
 
         #side-menu {
@@ -66,18 +73,18 @@
             text-shadow: 0px 3px 6px rgba(0,0,0,0.1);
         }
 
-        .fancy-promo {
+        .coming-soon-tag {
             display: inline-block;
-            background: linear-gradient(135deg, #d63031, #ff7675);
-            color: white; padding: 8px 20px; border-radius: 50px;
-            font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(214, 48, 49, 0.3);
-            margin: 10px 0; animation: pulse 2s infinite;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: white; padding: 8px 25px; border-radius: 50px;
+            font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+            margin: 15px 0; animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .products-grid {
@@ -117,13 +124,6 @@
             max-height: 85vh; overflow-y: auto;
         }
 
-        .terms-btn-fixed {
-            position: fixed; bottom: 20px; left: 20px; z-index: 1000;
-            background: #e9ecef; color: #555; border: 1px solid #ccc;
-            padding: 8px 15px; border-radius: 8px; font-size: 12px;
-            cursor: pointer; font-weight: bold;
-        }
-
         @media (max-width: 768px) { 
             .products-grid { grid-template-columns: 1fr; } 
             .header-title-top { font-size: 38px; }
@@ -138,7 +138,7 @@
 
     <div id="side-menu">
         <button onclick="toggleMenu()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 25px; cursor: pointer;">&times;</button>
-        <div class="side-menu-link" onclick="openAbout()">🌟 What's Special About Us</div>
+        <div class="side-menu-link" onclick="showAboutModal()">🌟 What's Special About Us</div>
         <div class="side-menu-link" onclick="window.open('https://wa.me/972509099321?text=I need support')">📧 Support</div>
         <div class="side-menu-link" onclick="window.open('https://wa.me/972509099321?text=I want to request a Custom Order')">🛠️ Custom Order</div>
         <div class="side-menu-link" onclick="openContact()">📞 Contact Us</div>
@@ -149,8 +149,10 @@
     </button>
 
     <div id="contact-modal"><div class="modal-content"><span onclick="closeContact()" style="position:absolute; top:10px; right:20px; cursor:pointer; font-size:28px;">&times;</span><h2 style="color:#023e8a;">Contact Us 📞</h2><div style="text-align: left; font-size: 16px; color: #444; margin: 25px 0; line-height: 2.5;"><p><b>📱 Phone:</b> +972 50-909-9321</p><p><b>📧 Email:</b> raykon3d@gmail.com</p></div><button onclick="closeContact()" style="width:100%; background:#023e8a; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">Close</button></div></div>
-    <div id="about-modal"><div class="modal-content"><span onclick="closeAbout()" style="position:absolute; top:10px; right:20px; cursor:pointer; font-size:28px;">&times;</span><h2 style="color:#023e8a;">What Makes Us Special? 🌟</h2><div style="text-align: left; font-size: 15px; color: #444; margin: 20px 0; line-height: 1.8;"><p>✅ <b>Precision Quality:</b> Perfect details in every print.</p><p>✅ <b>Fast Local Delivery:</b> Within 2-5 business days.</p><p>✅ <b>Custom Orders:</b> Your imagination, our printer.</p><p>✅ <b>Strong Materials:</b> We use durable PLA+.</p></div><button onclick="closeAbout()" style="width:100%; background:#023e8a; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">Great!</button></div></div>
-    <div id="terms-modal"><div class="modal-content"><span onclick="closeTerms()" style="position:absolute; top:10px; right:20px; cursor:pointer; font-size:28px;">&times;</span><h2 style="color:#023e8a;">Terms of Policy</h2><div style="text-align: left; font-size: 14px; color: #555; margin: 20px 0; line-height: 1.6;"><p>• All items are custom 3D printed.</p><p>• Delivery takes 2-5 business days.</p><p style="color: #28a745; font-weight: bold;">• Payment: Pay for the product only when it arrives at your door (Cash on Delivery).</p><p style="color: #d63031; font-weight: bold;">• No refunds after 24 hours of ordering.</p><p style="color: #023e8a; font-weight: bold;">• Delivery fees paid on arrival.</p></div><button onclick="closeTerms()" style="width:100%; background:#023e8a; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">I Agree</button></div></div>
+    
+    <div id="about-modal"><div class="modal-content"><span onclick="closeAbout()" style="position:absolute; top:10px; right:20px; cursor:pointer; font-size:28px;">&times;</span><h2 style="color:#023e8a;">What Makes Us Special? 🌟</h2><div style="text-align: left; font-size: 15px; color: #444; margin: 20px 0; line-height: 1.8;"><p>✅ <b>Precision Quality:</b> Perfect details in every print.</p><p>✅ <b>Fast Local Delivery:</b> Within 2-5 business days.</p><p>✅ <b>Custom Orders:</b> Your imagination, our printer.</p><p>✅ <b>Strong Materials:</b> We use durable PLA+.</p></div><button onclick="closeAbout()" style="width:100%; background:#023e8a; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">Let's Shop! 🚀</button></div></div>
+    
+    <div id="terms-modal"><div class="modal-content"><h2 style="color:#023e8a;">Terms of Policy</h2><div style="text-align: left; font-size: 14px; color: #555; margin: 20px 0; line-height: 1.6;"><p>• All items are custom 3D printed.</p><p>• Delivery takes 2-5 business days.</p><p style="color: #28a745; font-weight: bold;">• Payment: Cash on Delivery.</p><p style="color: #d63031; font-weight: bold;">• No refunds after 24 hours of ordering.</p><p style="color: #023e8a; font-weight: bold;">• Delivery fees paid on arrival.</p></div><button onclick="agreeToTerms()" style="width:100%; background:#023e8a; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">I Agree</button></div></div>
 
     <div id="side-cart" style="position: fixed; top: 0; right: -350px; width: 320px; height: 100%; background: white; box-shadow: -5px 0 15px rgba(0,0,0,0.1); z-index: 2000; transition: 0.3s ease; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box;">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px;"><h2 style="margin: 0; font-size: 1.2rem;">Your Cart</h2><button onclick="toggleCart()" style="background: none; border: none; font-size: 25px; cursor: pointer;">&times;</button></div>
@@ -179,7 +181,8 @@
             <div class="premium-tag">✨ PREMIUM QUALITY ✨</div>
             <div class="header-title-bottom">RAYKON</div>
         </div>
-        <div class="fancy-promo">🎁 First 10 orders get 10% off 🎁</div>
+
+        <div class="coming-soon-tag">🚀 More products coming soon</div>
         
         <div class="products-grid">
             <div class="product-card"><div class="product-img-box"><img src="knife.jpg"></div><h3>Knife</h3><p style="font-weight:bold;color:#023e8a;">9.90 ₪</p><button class="add-to-cart-btn" onclick="openProduct('Knife', 9.90, 'knife.jpg', 'Safe 3D printed knife model.')">Add to Cart</button></div>
@@ -188,32 +191,38 @@
             <div class="product-card"><div class="product-img-box"><img src="comb.jpg"></div><h3>Little Comb</h3><p style="font-weight:bold;color:#023e8a;">10.00 ₪</p><button class="add-to-cart-btn" onclick="openProduct('Little Comb', 10, 'comb.jpg', 'Durable 3D printed comb.')">Add to Cart</button></div>
             <div class="product-card"><div class="product-img-box"><img src="phone-holder.jpg"></div><h3>Phone Holder</h3><p style="font-weight:bold;color:#023e8a;">13.00 ₪</p><button class="add-to-cart-btn" onclick="openProduct('Phone Holder', 13, 'phone-holder.jpg', 'Convenient desktop stand.')">Add to Cart</button></div>
             <div class="product-card"><div class="product-img-box"><img src="whistle.jpg"></div><h3>Whistle</h3><p style="font-weight:bold;color:#023e8a;">8.00 ₪</p><button class="add-to-cart-btn" onclick="openProduct('Whistle', 8, 'whistle.jpg', 'Functional loud whistle.')">Add to Cart</button></div>
-            
             <div class="product-card"><div class="product-img-box"><img src="infinity-cube.jpg"></div><h3>Infinity Cube</h3><p style="font-weight:bold;color:#023e8a;">17.99 ₪</p><button class="add-to-cart-btn" onclick="openProduct('Infinity Cube', 17.99, 'infinity-cube.jpg', 'Endless folding fidget toy.')">Add to Cart</button></div>
             <div class="product-card"><div class="product-img-box"><img src="wiggly.jpg"></div><h3>Wiggly</h3><p style="font-weight:bold;color:#023e8a;">39.99 ₪</p><button class="add-to-cart-btn" onclick="openProduct('Wiggly', 39.99, 'wiggly.jpg', 'Satisfying flexible movement.')">Add to Cart</button></div>
             <div class="product-card"><div class="product-img-box"><img src="egg.jpg"></div><h3>Egg</h3><p style="font-weight:bold;color:#023e8a;">19.99 ₪</p><button class="add-to-cart-btn" onclick="openProduct('Egg', 19.99, 'egg.jpg', 'Unique 3D printed egg.')">Add to Cart</button></div>
-            
             <div class="product-card"><div class="product-img-box"><img src="dinosaur-bookmark.jpg"></div><h3>Dinosaur Bookmark</h3><p style="font-weight:bold;color:#023e8a;">10.00 ₪</p><button class="add-to-cart-btn" onclick="openProduct('Dinosaur Bookmark', 10, 'dinosaur-bookmark.jpg', 'Cool dinosaur for your books.')">Add to Cart</button></div>
             <div class="product-card"><div class="product-img-box"><img src="ghost-bookmark.jpg"></div><h3>Ghost Bookmark</h3><p style="font-weight:bold;color:#023e8a;">10.00 ₪</p><button class="add-to-cart-btn" onclick="openProduct('Ghost Bookmark', 10, 'ghost-bookmark.jpg', 'Spooky but cute bookmark.')">Add to Cart</button></div>
             <div class="product-card"><div class="product-img-box"><img src="carrot-bookmark.jpg"></div><h3>Carrot Bookmark</h3><p style="font-weight:bold;color:#023e8a;">10.00 ₪</p><button class="add-to-cart-btn" onclick="openProduct('Carrot Bookmark', 10, 'carrot-bookmark.jpg', 'Fresh carrot design for reading.')">Add to Cart</button></div>
-
             <div class="product-card"><div class="product-img-box"><img src="ps5-holder.jpg"></div><h3>PS5 Holder</h3><p style="font-weight:bold;color:#023e8a;">4.99 ₪</p><button class="add-to-cart-btn" onclick="openProduct('PS5 Holder', 4.99, 'ps5-holder.jpg', 'Premium stand for your PS5 controller.')">Add to Cart</button></div>
             <div class="product-card"><div class="product-img-box"><img src="xbox-holder.jpg"></div><h3>Xbox Holder</h3><p style="font-weight:bold;color:#023e8a;">4.99 ₪</p><button class="add-to-cart-btn" onclick="openProduct('Xbox Holder', 4.99, 'xbox-holder.jpg', 'Durable stand for Xbox controllers.')">Add to Cart</button></div>
-            <div class="product-card"><div class="product-img-box"><img src="spinning-fidget.jpg"></div><h3>Spinning Fidget</h3><p style="font-weight:bold;color:#023e8a;">4.99 ₪</p><button class="add-to-cart-btn" onclick="openProduct('Spinning Fidget', 4.99, 'spinning-fidget.jpg', 'Fun and satisfying spinning toy.')">Add to Cart</button></div>
+            
+            <div class="product-card"><div class="product-img-box"><img src="spinning-fidget.jpg"></div><h3>Spinning Fidget</h3><p style="font-weight:bold;color:#023e8a;">9.99 ₪</p><button class="add-to-cart-btn" onclick="openProduct('Spinning Fidget', 9.99, 'spinning-fidget.jpg', 'Fun and satisfying spinning toy.')">Add to Cart</button></div>
         </div>
     </div>
 
     <script>
         let cart = []; let totalPrice = 0; let currentProduct = {};
-        function initPage() { window.scrollTo(0, 0); openTerms(); }
+
+        function initPage() { 
+            window.scrollTo(0, 0); 
+            document.getElementById('terms-modal').style.display = 'flex'; 
+        }
+
+        function agreeToTerms() {
+            document.getElementById('terms-modal').style.display = 'none';
+            document.getElementById('about-modal').style.display = 'flex';
+        }
+
         function toggleMenu() { const menu = document.getElementById('side-menu'); menu.style.left = (menu.style.left === "0px") ? "-280px" : "0px"; }
-        function openAbout() { toggleMenu(); document.getElementById('about-modal').style.display = 'flex'; }
+        function showAboutModal() { toggleMenu(); document.getElementById('about-modal').style.display = 'flex'; }
         function closeAbout() { document.getElementById('about-modal').style.display = 'none'; }
         function openContact() { toggleMenu(); document.getElementById('contact-modal').style.display = 'flex'; }
         function closeContact() { document.getElementById('contact-modal').style.display = 'none'; }
         function toggleCart() { const s = document.getElementById('side-cart'); s.style.right = (s.style.right === "0px") ? "-350px" : "0px"; }
-        function openTerms() { document.getElementById('terms-modal').style.display = 'flex'; }
-        function closeTerms() { document.getElementById('terms-modal').style.display = 'none'; }
 
         function openProduct(name, price, img, desc) {
             currentProduct = { name, price, img };
@@ -222,41 +231,40 @@
             document.getElementById('modal-img').src = img;
 
             const specialProducts = ['Infinity Cube', 'Wiggly', 'Egg', 'PS5 Holder', 'Xbox Holder', 'Spinning Fidget'];
-            
-            // خيار الثلاث ألوان مدمج في سطر واحد هنا
-            const customColors = [
-                'Green', 'Red', 'Pink', 'Shine Pink', 'Rainbow', 'Orange', 'Black', 
-                'Blue, Yellow and Pink', 'Gray', 'White', 'Cyan', 'Light Blue', 'Dark Blue', 'Turquoise'
-            ];
-            
+            const customColors = ['Green', 'Red', 'Pink', 'Shine Pink (+3.90₪)', 'Rainbow (+3.90₪)', 'Orange', 'Black', 'Blue, Yellow and Pink (+3.90₪)', 'Gray', 'White', 'Cyan', 'Light Blue', 'Dark Blue', 'Turquoise'];
             const defaultColors = ['White', 'Black', 'Red', 'Green', 'Blue'];
+            
             const colorSelect = document.getElementById('modal-color');
             colorSelect.innerHTML = ''; 
-
             const colorsToDisplay = specialProducts.includes(name) ? customColors : defaultColors;
-
+            
             colorsToDisplay.forEach(color => {
                 const option = document.createElement('option');
                 option.value = color;
                 option.text = color;
                 colorSelect.appendChild(option);
             });
-
             document.getElementById('product-modal').style.display = 'flex';
         }
 
         function closeModal() { document.getElementById('product-modal').style.display = 'none'; }
+
         function confirmAddToCart() {
-            const color = document.getElementById('modal-color').value;
-            addToCart(`${currentProduct.name} (${color})`, currentProduct.price);
-            closeModal(); if (document.getElementById('side-cart').style.right !== "0px") toggleCart();
+            const selectedColor = document.getElementById('modal-color').value;
+            let finalPrice = currentProduct.price;
+            if (selectedColor.includes('(+3.90₪)')) finalPrice += 3.90;
+            addToCart(`${currentProduct.name} (${selectedColor})`, finalPrice);
+            closeModal();
+            if (document.getElementById('side-cart').style.right !== "0px") toggleCart();
         }
+
         function addToCart(name, price) { cart.push({ id: Date.now(), name, price }); totalPrice += price; updateCartUI(); }
         function removeFromCart(id) {
             const idx = cart.findIndex(i => i.id === id);
             if (idx > -1) { totalPrice -= cart[idx].price; cart.splice(idx, 1); }
             updateCartUI();
         }
+
         function updateCartUI() {
             const list = document.getElementById('cart-items-list');
             const totalDisp = document.getElementById('cart-total-price');
@@ -270,6 +278,7 @@
                 list.appendChild(li);
             });
         }
+
         function sendOrderWhatsApp() {
             if (cart.length === 0) { alert("Your cart is empty!"); return; }
             const myPhoneNumber = "972509099321"; 
