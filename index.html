@@ -21,6 +21,7 @@
             background-color: var(--silver-bg);
             color: var(--text-dark);
             transition: direction 0.3s ease;
+            overflow-x: hidden;
         }
 
         body.rtl { direction: rtl; font-family: 'Tahoma', 'Arial', sans-serif; }
@@ -52,8 +53,9 @@
         .side-menu-link {
             display: block; padding: 15px; color: var(--text-dark);
             text-decoration: none; font-weight: bold; border-bottom: 1px solid #eee;
-            transition: 0.2s; cursor: pointer;
+            transition: 0.2s; cursor: pointer; text-align: left;
         }
+        body.rtl .side-menu-link { text-align: right; }
 
         .side-menu-link:hover { background: #f0f0f0; }
 
@@ -102,12 +104,6 @@
             color: white; padding: 8px 25px; border-radius: 50px;
             font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
             margin: 15px 0; animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
-            100% { transform: scale(1); opacity: 1; }
         }
 
         .products-grid {
@@ -189,7 +185,7 @@
         <div class="side-menu-link" onclick="window.open('https://wa.me/972509099321?text=I need support')" id="link-support">📧 Support</div>
         <div class="side-menu-link" onclick="window.open('https://wa.me/972509099321?text=I want to request a Custom Order')" id="link-custom">🛠️ Custom Order</div>
         <div class="side-menu-link" onclick="openContact()" id="link-contact">📞 Contact Us</div>
-        <div class="side-menu-link" onclick="openSettings()" id="link-settings" style="color: #666; border-top: 2px solid #f0f0f0; margin-top: 10px;">⚙️ Settings</div>
+        <div class="side-menu-link" onclick="openSettings()" id="link-settings">⚙️ Settings</div>
     </div>
 
     <div id="settings-modal">
@@ -238,10 +234,21 @@
             <img id="modal-img" src="" style="width:150px; margin-bottom:15px;">
             <h2 id="modal-title" style="color:#023e8a;"></h2>
             <p id="modal-desc" style="color:#666; font-size:14px; margin-bottom:20px;"></p>
-            <div style="text-align:left; margin-bottom:20px;">
+            
+            <div id="color-section" style="text-align:left; margin-bottom:15px;">
                 <label style="font-weight:bold;" id="label-choose-color">Choose Color:</label>
                 <select id="modal-color" style="width:100%; padding:10px; border-radius:8px; margin-top:5px;"></select>
             </div>
+
+            <div id="size-section" style="text-align:left; margin-bottom:20px; display:none;">
+                <label style="font-weight:bold;" id="label-choose-size">Choose Size:</label>
+                <select id="modal-size" style="width:100%; padding:10px; border-radius:8px; margin-top:5px;">
+                    <option value="Small" data-extra="0">Small (Base Price)</option>
+                    <option value="Long" data-extra="5.00">Long (+5.00 ₪)</option>
+                    <option value="Extra Long" data-extra="10.00">Extra Long (+10.00 ₪)</option>
+                </select>
+            </div>
+
             <button onclick="confirmAddToCart()" id="btn-confirm-add" style="width:100%; background:#28a745; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold;">Confirm & Add 🛒</button>
         </div>
     </div>
@@ -261,90 +268,38 @@
     <script>
         const translations = {
             en: {
-                welcome: "WELCOME",
-                imagination: "💡 Your imagination has no limit, custom order now! 💡",
-                premium: "✨ PREMIUM QUALITY ✨",
-                comingSoon: "🚀 More products coming soon",
-                specialLink: "🌟 What's Special About Us",
-                supportLink: "📧 Support",
-                customLink: "🛠️ Custom Order",
-                contactLink: "📞 Contact Us",
-                settingsLink: "⚙️ Settings",
-                settingsTitle: "Settings ⚙️",
-                langLabel: "Language",
-                termsLabel: "📜 Terms of Policy",
-                saveBtn: "Save",
-                cartLabel: "Cart",
-                cartHeader: "Your Cart",
-                totalLabel: "Total",
-                checkoutBtn: "WhatsApp Checkout 🛒",
-                aboutTitle: "What Makes Us Special? 🌟",
+                welcome: "WELCOME", imagination: "💡 Your imagination has no limit, custom order now! 💡", premium: "✨ PREMIUM QUALITY ✨",
+                comingSoon: "🚀 More products coming soon", specialLink: "🌟 What's Special About Us", supportLink: "📧 Support",
+                customLink: "🛠️ Custom Order", contactLink: "📞 Contact Us", settingsLink: "⚙️ Settings", settingsTitle: "Settings ⚙️",
+                langLabel: "Language", termsLabel: "📜 Terms of Policy", saveBtn: "Save", cartLabel: "Cart", cartHeader: "Your Cart",
+                totalLabel: "Total", checkoutBtn: "WhatsApp Checkout 🛒", aboutTitle: "What Makes Us Special? 🌟",
                 aboutContent: "<p>✅ <b>Precision Quality:</b> Perfect details.</p><p>✅ <b>Fast Local Delivery:</b> 2-5 business days.</p><p>✅ <b>Custom Orders:</b> Your imagination, our printer.</p><p>✅ <b>Strong Materials:</b> We use PLA+.</p>",
                 termsTitle: "Terms & Safety Policy",
-                termsContent: `
-                    <p>• All items are custom 3D printed.</p>
-                    <p>• Delivery: 2-5 business days.</p>
-                    <p style='color:#28a745'>• Cash on Delivery.</p>
-                    <div class="disclaimer-box">
-                        <strong style="color:var(--crimson)">⚠️ Safety Disclaimer:</strong><br>
-                        All products are plastic 3D printed models for display or play only. They are NOT real tools or weapons. Raykon 3D is not responsible for any misuse.
-                    </div>
-                `,
-                agreeBtn: "I Understand & Agree",
-                chooseColor: "Choose Color:",
-                confirmBtn: "Confirm & Add 🛒",
-                addBtn: "Add to Cart",
-                emptyCart: "Cart is empty",
-                close: "Close",
-                shopNow: "Let's Shop! 🚀"
+                termsContent: `<p>• All items are custom 3D printed.</p><p>• Delivery: 2-5 business days.</p><p style='color:#28a745'>• Cash on Delivery.</p><div class="disclaimer-box"><strong style="color:var(--crimson)">⚠️ Safety Disclaimer:</strong><br>All products are plastic 3D printed models for display or play only. They are NOT real tools or weapons. Raykon 3D is not responsible for any misuse.</div>`,
+                agreeBtn: "I Understand & Agree", chooseColor: "Choose Color:", chooseSize: "Choose Size:", confirmBtn: "Confirm & Add 🛒",
+                addBtn: "Add to Cart", emptyCart: "Cart is empty", close: "Close", shopNow: "Let's Shop! 🚀", sizeSmall: "Small", sizeLong: "Long (+5.00 ₪)", sizeExtraLong: "Extra Long (+10.00 ₪)"
             },
             ar: {
-                welcome: "أهلاً بك",
-                imagination: "💡 خيالك ليس له حدود، اطلب طلبك الخاص الآن! 💡",
-                premium: "✨ جودة ممتازة ✨",
-                comingSoon: "🚀 المزيد من المنتجات قريباً",
-                specialLink: "🌟 ما الذي يميزنا؟",
-                supportLink: "📧 الدعم الفني",
-                customLink: "🛠️ طلب خاص",
-                contactLink: "📞 اتصل بنا",
-                settingsLink: "⚙️ الإعدادات",
-                settingsTitle: "الإعدادات ⚙️",
-                langLabel: "اللغة",
-                termsLabel: "📜 شروط السياسة",
-                saveBtn: "حفظ",
-                cartLabel: "السلة",
-                cartHeader: "سلتك",
-                totalLabel: "المجموع",
-                checkoutBtn: "إتمام الطلب عبر واتساب 🛒",
-                aboutTitle: "ما الذي يميزنا؟ 🌟",
+                welcome: "أهلاً بك", imagination: "💡 خيالك ليس له حدود، اطلب طلبك الخاص الآن! 💡", premium: "✨ جودة ممتازة ✨",
+                comingSoon: "🚀 المزيد من المنتجات قريباً", specialLink: "🌟 ما الذي يميزنا؟", supportLink: "📧 الدعم الفني",
+                customLink: "🛠️ طلب خاص", contactLink: "📞 اتصل بنا", settingsLink: "⚙️ الإعدادات", settingsTitle: "الإعدادات ⚙️",
+                langLabel: "اللغة", termsLabel: "📜 شروط السياسة", saveBtn: "حفظ", cartLabel: "السلة", cartHeader: "سلتك",
+                totalLabel: "المجموع", checkoutBtn: "إتمام الطلب عبر واتساب 🛒", aboutTitle: "ما الذي يميزنا؟ 🌟",
                 aboutContent: "<p>✅ <b>دقة الجودة:</b> تفاصيل مثالية في كل قطعة.</p><p>✅ <b>توصيل محلي سريع:</b> خلال 2-5 أيام عمل.</p><p>✅ <b>طلبات خاصة:</b> خيالك، وطابعتنا تنفذ.</p><p>✅ <b>مواد قوية:</b> نستخدم مواد PLA+ المتينة.</p>",
                 termsTitle: "شروط السياسة والسلامة",
-                termsContent: `
-                    <p>• جميع القطع مطبوعة بتقنية 3D.</p>
-                    <p>• التوصيل يستغرق 2-5 أيام عمل.</p>
-                    <p style='color:#28a745'>• الدفع عند الاستلام (كاش).</p>
-                    <div class="disclaimer-box">
-                        <strong style="color:var(--crimson)">⚠️ إخلاء مسؤولية:</strong><br>
-                        جميع المنتجات هي مجرد مجسمات بلاستيكية مطبوعة للعرض أو اللعب فقط. ليست أدوات أو أسلحة حقيقية، والمتجر غير مسؤول عن أي سوء استخدام.
-                    </div>
-                `,
-                agreeBtn: "أوافق وأفهم الشروط",
-                chooseColor: "اختر اللون:",
-                confirmBtn: "تأكيد وإضافة 🛒",
-                addBtn: "أضف للسلة",
-                emptyCart: "السلة فارغة",
-                close: "إغلاق",
-                shopNow: "تسوق الآن! 🚀"
+                termsContent: `<p>• جميع القطع مطبوعة بتقنية 3D.</p><p>• التوصيل يستغرق 2-5 أيام عمل.</p><p style='color:#28a745'>• الدفع عند الاستلام (كاش).</p><div class="disclaimer-box"><strong style="color:var(--crimson)">⚠️ إخلاء مسؤولية:</strong><br>جميع المنتجات هي مجرد مجسمات بلاستيكية مطبوعة للعرض أو اللعب فقط. ليست أدوات أو أسلحة حقيقية، والمتجر غير مسؤول عن أي سوء استخدام.</div>`,
+                agreeBtn: "أوافق وأفهم الشروط", chooseColor: "اختر اللون:", chooseSize: "اختر الحجم:", confirmBtn: "تأكيد وإضافة 🛒",
+                addBtn: "أضف للسلة", emptyCart: "السلة فارغة", close: "إغلاق", shopNow: "تسوق الآن! 🚀", sizeSmall: "صغير (سمول)", sizeLong: "طويل (لونغ) (+5.00 ₪)", sizeExtraLong: "طويل جداً (اكسترا لونغ) (+10.00 ₪)"
             }
         };
 
         const products = [
             { id: 1, nameEn: "Knife Toy", nameAr: "لعبة سكين", price: 9.90, img: "knife.jpg", descEn: "Safe plastic model toy.", descAr: "نموذج بلاستيكي آمن للعب." },
             { id: 2, nameEn: "Lizard", nameAr: "سحلية", price: 10.00, img: "lizard.jpg", descEn: "Flexible joints.", descAr: "مفاصل متحركة." },
-            { id: 3, nameEn: "Little Sword", nameAr: "سيف صغير", price: 9.90, img: "sword.jpg", descEn: "Detailed model.", descAr: "سيف صغير دقيق." },
+            { id: 3, nameEn: "Little Sword", nameAr: "سيف صغير", price: 4.90, img: "sword.jpg", descEn: "Detailed model.", descAr: "سيف صغير دقيق." },
             { id: 4, nameEn: "Little Comb", nameAr: "مشط صغير", price: 10.00, img: "comb.jpg", descEn: "Durable comb.", descAr: "مشط صغير متين." },
             { id: 5, nameEn: "Phone Holder", nameAr: "حامل هاتف", price: 13.00, img: "phone-holder.jpg", descEn: "Desktop stand.", descAr: "قاعدة مكتبية للهاتف." },
-            { id: 6, nameEn: "Whistle", nameAr: "صافرة", price: 8.00, img: "whistle.jpg", descEn: "Loud whistle.", descAr: "صافرة حقيقية بصوت عالٍ." },
+            { id: 6, nameEn: "Whistle", nameAr: "صافرة", price: 4.90, img: "whistle.jpg", descEn: "Loud whistle.", descAr: "صافرة حقيقية بصوت عالٍ." },
             { id: 7, nameEn: "Infinity Cube", nameAr: "مكعب اللانهاية", price: 17.99, img: "infinity-cube.jpg", descEn: "Fidget toy.", descAr: "مكعب التململ." },
             { id: 8, nameEn: "Wiggly", nameAr: "ويجلي", price: 39.99, img: "wiggly.jpg", descEn: "Flexible movement.", descAr: "حركة مرنة مريحة." },
             { id: 9, nameEn: "Egg", nameAr: "بيضة", price: 19.99, img: "egg.jpg", descEn: "Unique 3D egg.", descAr: "بيضة فريدة." },
@@ -353,19 +308,26 @@
             { id: 12, nameEn: "Carrot Bookmark", nameAr: "فاصل كتب جزرة", price: 10.00, img: "carrot-bookmark.jpg", descEn: "Fun design.", descAr: "تصميم جزرة طريف." },
             { id: 13, nameEn: "PS5 Holder", nameAr: "حامل PS5", price: 4.99, img: "ps5-holder.jpg", descEn: "Controller stand.", descAr: "قاعدة ليد PS5." },
             { id: 14, nameEn: "Xbox Holder", nameAr: "حامل Xbox", price: 4.99, img: "xbox-holder.jpg", descEn: "Controller stand.", descAr: "قاعدة ليد Xbox." },
-            { id: 15, nameEn: "Spinning Fidget", nameAr: "سبينر دوار", price: 9.99, img: "spinning-fidget.jpg", descEn: "Spinning toy.", descAr: "لعبة دوارة ممتعة." }
+            { id: 15, nameEn: "Spinning Fidget", nameAr: "سبينر دوار", price: 9.99, img: "spinning-fidget.jpg", descEn: "Spinning toy.", descAr: "لعبة دوارة ممتعة." },
+            { id: 16, nameEn: "Cute Snakey", nameAr: "ثعبان لطيف", price: 6.90, img: "snake.jpg", descEn: "Friendly articulated snake.", descAr: "ثعبان لطيف بمفاصل متحركة." },
+            { id: 17, nameEn: "Can Tab Opener", nameAr: "فتاحة علب", price: 5.00, img: "can-opener.jpg", descEn: "Handy tool for opening tabs.", descAr: "أداة عملية لفتح علب المشروبات." },
+            { id: 18, nameEn: "Toothbrush Holder", nameAr: "حامل فرشاة أسنان", price: 14.90, img: "toothbrush.jpg", descEn: "Organize your bathroom.", descAr: "نظم حمامك بطريقة عصرية." },
+            { id: 19, nameEn: "Cute Octopus", nameAr: "أخطبوط لطيف", price: 12.90, img: "octopus.jpg", descEn: "Wiggling cute octopus.", descAr: "أخطبوط صغير ولطيف يتحرك." },
+            { id: 20, nameEn: "Hexagon Fidget", nameAr: "مكعب سداسي", price: 10.90, img: "hexagon.jpg", descEn: "Geometric fidget toy.", descAr: "لعبة تململ هندسية سداسية." },
+            { id: 21, nameEn: "Mini Twisty Fidget", nameAr: "لعبة ملتوية صغيرة", price: 10.00, img: "twisty.jpg", descEn: "Fun twistable toy.", descAr: "لعبة ممتعة قابلة للالتواء." },
+            { id: 22, nameEn: "Keycap Puller", nameAr: "ساحب أزرار الكيبورد", price: 4.90, img: "keycap.jpg", descEn: "Tool for keyboard cleaning.", descAr: "أداة لتنظيف وفك أزرار الكيبورد." },
+            { id: 23, nameEn: "Soda Can Opener", nameAr: "فتاحة علب صودا", price: 4.90, img: "soda.jpg", descEn: "Easily open soda cans.", descAr: "افتح علب الصودا بكل سهولة." }
         ];
 
         let cart = []; let totalPrice = 0; let currentProduct = {}; let currentLang = 'en';
 
-        function initPage() { 
-            renderProducts(); updateLanguageUI(); 
-            document.getElementById('terms-modal').style.display = 'flex'; 
-        }
+        function initPage() { renderProducts(); updateLanguageUI(); document.getElementById('terms-modal').style.display = 'flex'; }
 
         function changeLanguage() {
             currentLang = document.getElementById('lang-select').value;
             document.body.classList.toggle('rtl', currentLang === 'ar');
+            document.getElementById('side-menu').style.left = ''; document.getElementById('side-menu').style.right = '';
+            document.getElementById('side-cart').style.left = ''; document.getElementById('side-cart').style.right = '';
             updateLanguageUI(); renderProducts(); updateCartUI();
         }
 
@@ -395,22 +357,20 @@
             document.getElementById('terms-text').innerHTML = t.termsContent;
             document.getElementById('terms-close-btn').innerText = t.agreeBtn;
             document.getElementById('label-choose-color').innerText = t.chooseColor;
+            document.getElementById('label-choose-size').innerText = t.chooseSize;
             document.getElementById('btn-confirm-add').innerText = t.confirmBtn;
             document.getElementById('contact-title').innerText = t.contactLink;
             document.getElementById('btn-close-contact').innerText = t.close;
+            const sizeOpts = document.getElementById('modal-size').options;
+            sizeOpts[0].text = t.sizeSmall; sizeOpts[1].text = t.sizeLong; sizeOpts[2].text = t.sizeExtraLong;
         }
 
         function renderProducts() {
             const grid = document.getElementById('main-products-grid'); grid.innerHTML = '';
             products.forEach(p => {
                 const name = currentLang === 'ar' ? p.nameAr : p.nameEn;
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
-                    <div class="product-img-box"><img src="${p.img}"></div>
-                    <h3>${name}</h3><p style="font-weight:bold;color:#023e8a;">${p.price.toFixed(2)} ₪</p>
-                    <button class="add-to-cart-btn" onclick="openProduct(${p.id})">${translations[currentLang].addBtn}</button>
-                `;
+                const card = document.createElement('div'); card.className = 'product-card';
+                card.innerHTML = `<div class="product-img-box"><img src="${p.img}"></div><h3>${name}</h3><p style="font-weight:bold;color:#023e8a;">${p.price.toFixed(2)} ₪</p><button class="add-to-cart-btn" onclick="openProduct(${p.id})">${translations[currentLang].addBtn}</button>`;
                 grid.appendChild(card);
             });
         }
@@ -420,23 +380,21 @@
             document.getElementById('modal-title').innerText = currentLang === 'ar' ? currentProduct.nameAr : currentProduct.nameEn;
             document.getElementById('modal-desc').innerText = currentLang === 'ar' ? currentProduct.descAr : currentProduct.descEn;
             document.getElementById('modal-img').src = currentProduct.img;
-
-            const specialIds = [7, 8, 9, 13, 14, 15]; 
+            document.getElementById('size-section').style.display = (currentProduct.id === 16) ? 'block' : 'none';
+            const specialIds = [7, 8, 9, 13, 14, 15, 16, 19, 20, 21]; 
             const customColors = ['Green', 'Red', 'Pink', 'Shine Pink (+3.90₪)', 'Rainbow (+3.90₪)', 'Orange', 'Black', 'Blue-Yellow-Pink (+3.90₪)', 'Gray', 'White', 'Cyan', 'Turquoise'];
             const defaultColors = ['White', 'Black', 'Red', 'Green', 'Blue'];
-            
             const colorSelect = document.getElementById('modal-color'); colorSelect.innerHTML = ''; 
             (specialIds.includes(currentProduct.id) ? customColors : defaultColors).forEach(c => {
-                const opt = document.createElement('option'); opt.value = c; opt.text = c;
-                colorSelect.appendChild(opt);
+                const opt = document.createElement('option'); opt.value = c; opt.text = c; colorSelect.appendChild(opt);
             });
             document.getElementById('product-modal').style.display = 'flex';
         }
 
         function toggleMenu() { 
             const menu = document.getElementById('side-menu');
-            const prop = currentLang === 'en' ? 'left' : 'right';
-            menu.style[prop] = (menu.style[prop] === "0px") ? "-280px" : "0px";
+            if (currentLang === 'en') { menu.style.left = (menu.style.left === "0px") ? "-280px" : "0px"; } 
+            else { menu.style.right = (menu.style.right === "0px") ? "-280px" : "0px"; }
         }
 
         function agreeToTerms() { document.getElementById('terms-modal').style.display = 'none'; document.getElementById('about-modal').style.display = 'flex'; }
@@ -451,15 +409,22 @@
         
         function toggleCart() { 
             const s = document.getElementById('side-cart');
-            const prop = currentLang === 'en' ? 'right' : 'left';
-            s.style[prop] = (s.style[prop] === "0px") ? "-350px" : "0px";
+            if (currentLang === 'en') { s.style.right = (s.style.right === "0px") ? "-350px" : "0px"; } 
+            else { s.style.left = (s.style.left === "0px") ? "-350px" : "0px"; }
         }
 
         function confirmAddToCart() {
             const color = document.getElementById('modal-color').value;
-            let price = currentProduct.price; if (color.includes('(+3.90₪)')) price += 3.90;
+            let price = currentProduct.price; 
+            if (color.includes('(+3.90₪)')) price += 3.90;
+            let sizeInfo = "";
+            if (currentProduct.id === 16) {
+                const sizeSelect = document.getElementById('modal-size');
+                const extraPrice = parseFloat(sizeSelect.options[sizeSelect.selectedIndex].getAttribute('data-extra'));
+                price += extraPrice; sizeInfo = " - Size: " + sizeSelect.value;
+            }
             const name = currentLang === 'ar' ? currentProduct.nameAr : currentProduct.nameEn;
-            cart.push({ id: Date.now(), name: `${name} (${color})`, price });
+            cart.push({ id: Date.now(), name: `${name} (${color})${sizeInfo}`, price });
             totalPrice += price; updateCartUI(); closeModal(); toggleCart();
         }
 
